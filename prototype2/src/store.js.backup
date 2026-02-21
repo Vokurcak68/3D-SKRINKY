@@ -1,0 +1,545 @@
+import { create } from 'zustand'
+import { broadcastState, broadcastSelection } from './sync/channelSync'
+import decorsData from './data/decors.json'
+
+// Globální store pro stav aplikace
+export const useStore = create((set, get) => ({
+  // Skříňky umístěné na scéně
+  placedCabinets: [],
+
+  // Vybraná skříňka
+  selectedCabinet: null,
+
+  // Katalog skříněk
+  catalog: { cabinets: [], models: {} },
+
+  // Dekory - kolekce a globální výchozí nastavení
+  decors: decorsData,
+  globalDecors: {
+    frontDecor: decorsData.defaults.frontDecor,
+    bodyDecor: decorsData.defaults.bodyDecor,
+    countertopDecor: decorsData.defaults.countertopDecor
+  },
+  decorTexturesLoaded: false,
+
+  // Rozměry místnosti (v mm)
+  roomWidth: 4000,
+  roomDepth: 3000,
+  roomHeight: 2600,
+
+  // Nastavení přichytávání
+  snapToGrid: true,
+  snapToWall: true,
+  snapToCabinet: true,
+  gridSize: 0.05, // 5cm mřížka
+
+  // Stav tažení (pro blokování OrbitControls)
+  isDragging: false,
+  draggingCabinetId: null,  // ID aktuálně tažené skříňky
+  dragOffset: { x: 0, z: 0 },  // Offset pro tažení
+
+  // Začátek tažení konkrétní skříňky
+  startDragging: (instanceId, offsetX, offsetZ) => {
+    set({
+      isDragging: true,
+      draggingCabinetId: instanceId,
+      dragOffset: { x: offsetX, z: offsetZ }
+    })
+  },
+
+  // Konec tažení
+  stopDragging: () => {
+    set({
+      isDragging: false,
+      draggingCabinetId: null,
+      dragOffset: { x: 0, z: 0 }
+    })
+  },
+
+  // Stav tažení z katalogu (drag & drop nové skříňky)
+  draggedCabinet: null,  // Skříňka tažená z katalogu
+  dragPreviewPosition: null,  // Pozice ghost preview [x, y, z]
+  dragPreviewRotation: 0,  // Rotace ghost preview
+
+  setDraggedCabinet: (cabinet) => set({
+    draggedCabinet: cabinet,
+    dragPreviewPosition: cabinet ? [0, 0, 0] : null,
+    dragPreviewRotation: 0
+  }),
+
+  updateDragPreview: (position, rotation = 0) => set({
+    dragPreviewPosition: position,
+    dragPreviewRotation: rotation
+  }),
+
+  // Akce
+  setCatalog: (catalog) => set({ catalog }),
+
+  addCabinet: (cabinet) => {
+    const { findNextPositionInLine } = get()
+    const cabWidth = (cabinet.width || 600) / 1000
+    const cabDepth = (cabinet.depth || 560) / 1000
+
+    // Najdi optimální pozici v lince (vrací { position, rotation })
+    const placement = findNextPositionInLine(cabinet.type, cabWidth, cabDepth)
+
+    set((state) => ({
+      placedCabinets: [...state.placedCabinets, {
+        ...cabinet,
+        instanceId: Date.now() + Math.random(),
+        position: placement.position,
+        rotation: placement.rotation
+      }]
+    }))
+  },
+
+  // Přidá skříňku na konkrétní pozici (pro drag & drop)
+  addCabinetAtPosition: (cabinet, position, rotation = 0) => {
+    set((state) => ({
+      placedCabinets: [...state.placedCabinets, {
+        ...cabinet,
+        instanceId: Date.now() + Math.random(),
+        position: position,
+        rotation: rotation
+      }],
+      draggedCabinet: null,
+      dragPreviewPosition: null,
+      dragPreviewRotation: 0
+    }))
+  },
+
+  // Najde další volnou pozici v lince pro daný typ skříňky
+  // Vrací { position: [x, y, z], rotation: number }
+  findNextPositionInLine: (cabinetType, cabWidth, cabDepth) => {
+    const { placedCabinets, roomDepth, roomWidth } = get()
+    const roomW = roomWidth / 1000
+    const roomD = roomDepth / 1000
+
+    // Výchozí pozice - levý roh u zadní stěny
+    const startX = -roomW / 2
+    const backWallZ = -roomD / 2 + cabDepth
+
+    // Výška podle typu
+    let yPos = 0
+    if (cabinetType === 'wall') {
+      yPos = 1.4 // 140cm od podlahy
+    }
+
+    // Filtruj skříňky stejného typu (base/tall sdílí řadu, wall má vlastní)
+    const sameLevelCabinets = placedCabinets.filter(c => {
+      return cabinetType === 'wall'
+        ? c.type === 'wall'
+        : (c.type === 'base' || c.type === 'tall' || !c.type)
+    })
+
+    if (sameLevelCabinets.length === 0) {
+      // První skříňka - začni v levém rohu u zadní stěny
+      return { position: [startX, yPos, backWallZ], rotation: 0 }
+    }
+
+    // Najdi poslední přidanou skříňku (podle instanceId - nejvyšší = nejnovější)
+    const lastAddedCab = sameLevelCabinets.reduce((latest, cab) =>
+      cab.instanceId > latest.instanceId ? cab : latest
+    )
+
+    const lastRotation = lastAddedCab.rotation || 0
+    const isLastRotated = Math.abs(lastRotation) > 0.1
+
+    // Pokud je poslední skříňka otočená (u boční stěny), přidej vedle ní podél stěny
+    if (isLastRotated) {
+      if (lastRotation < 0) {
+        // Levá stěna - skříňka je otočená o -90°
+        // Nová skříňka se přidá směrem k zadní stěně (menší Z)
+        const newZ = lastAddedCab.position[2] - cabWidth
+        if (newZ >= -roomD / 2 + cabWidth) {
+          return {
+            position: [-roomW / 2 + cabDepth, yPos, newZ],
+            rotation: -Math.PI / 2
+          }
+        }
+      } else {
+        // Pravá stěna - skříňka je otočená o +90°
+        // Nová skříňka se přidá směrem k zadní stěně (menší Z)
+        const newZ = lastAddedCab.position[2] - cabWidth
+        if (newZ >= -roomD / 2 + cabWidth) {
+          return {
+            position: [roomW / 2 - cabDepth, yPos, newZ],
+            rotation: Math.PI / 2
+          }
+        }
+      }
+    }
+
+    // Najdi neotočené skříňky pro hlavní linku
+    const straightCabinets = sameLevelCabinets.filter(c => Math.abs(c.rotation || 0) < 0.1)
+
+    if (straightCabinets.length === 0) {
+      // Všechny jsou otočené - začni novou linku u zadní stěny
+      return { position: [startX, yPos, backWallZ], rotation: 0 }
+    }
+
+    // Seskup neotočené skříňky podle jejich Z pozice (řady)
+    const rows = {}
+    straightCabinets.forEach(cab => {
+      const zKey = Math.round(cab.position[2] * 10) / 10
+      if (!rows[zKey]) rows[zKey] = []
+      rows[zKey].push(cab)
+    })
+
+    // Najdi řadu nejblíže k zadní stěně
+    const rowZValues = Object.keys(rows).map(Number).sort((a, b) => a - b)
+    const mainRowZ = rowZValues[0]
+
+    // Seřaď skříňky v hlavní řadě podle X
+    const mainRowCabs = rows[mainRowZ].sort((a, b) => a.position[0] - b.position[0])
+
+    // Najdi pravý okraj nejpravější skříňky
+    const lastCab = mainRowCabs[mainRowCabs.length - 1]
+    const lastRightEdge = lastCab.position[0] + (lastCab.width || 600) / 1000
+
+    // Zkontroluj, jestli se vejde za poslední skříňku
+    if (lastRightEdge + cabWidth <= roomW / 2) {
+      return { position: [lastRightEdge, yPos, lastCab.position[2]], rotation: 0 }
+    }
+
+    // Nevejde se - hledej mezeru v hlavní řadě
+    for (let i = 0; i < mainRowCabs.length - 1; i++) {
+      const current = mainRowCabs[i]
+      const next = mainRowCabs[i + 1]
+      const currentRight = current.position[0] + (current.width || 600) / 1000
+      const gap = next.position[0] - currentRight
+
+      if (gap >= cabWidth) {
+        return { position: [currentRight, yPos, current.position[2]], rotation: 0 }
+      }
+    }
+
+    // Zkus začít novou řadu (posun do místnosti)
+    const newRowZ = mainRowZ + cabDepth + 0.1
+    if (newRowZ < roomD / 2 - cabDepth) {
+      return { position: [startX, yPos, newRowZ], rotation: 0 }
+    }
+
+    // Fallback - umísti doprostřed
+    return { position: [0, yPos, 0], rotation: 0 }
+  },
+
+  removeCabinet: (instanceId) => set((state) => ({
+    placedCabinets: state.placedCabinets.filter(c => c.instanceId !== instanceId),
+    selectedCabinet: state.selectedCabinet?.instanceId === instanceId ? null : state.selectedCabinet
+  })),
+
+  selectCabinet: (cabinet) => set({ selectedCabinet: cabinet }),
+
+  updateCabinetPosition: (instanceId, position) => set((state) => ({
+    placedCabinets: state.placedCabinets.map(c =>
+      c.instanceId === instanceId ? { ...c, position } : c
+    ),
+    selectedCabinet: state.selectedCabinet?.instanceId === instanceId
+      ? { ...state.selectedCabinet, position }
+      : state.selectedCabinet
+  })),
+
+  updateCabinetRotation: (instanceId, rotation) => set((state) => ({
+    placedCabinets: state.placedCabinets.map(c =>
+      c.instanceId === instanceId ? { ...c, rotation } : c
+    ),
+    selectedCabinet: state.selectedCabinet?.instanceId === instanceId
+      ? { ...state.selectedCabinet, rotation }
+      : state.selectedCabinet
+  })),
+
+  setRoomDimensions: (width, depth, height) => set({
+    roomWidth: width,
+    roomDepth: depth,
+    roomHeight: height
+  }),
+
+  toggleSnapToGrid: () => set((state) => ({ snapToGrid: !state.snapToGrid })),
+  toggleSnapToWall: () => set((state) => ({ snapToWall: !state.snapToWall })),
+  toggleSnapToCabinet: () => set((state) => ({ snapToCabinet: !state.snapToCabinet })),
+  setGridSize: (size) => set({ gridSize: size }),
+
+  // Správa dekorů
+  setDecorTexturesLoaded: (loaded) => set({ decorTexturesLoaded: loaded }),
+
+  // Nastaví globální výchozí dekor (frontDecor, bodyDecor, countertopDecor)
+  setGlobalDecor: (type, decorId) => set((state) => ({
+    globalDecors: { ...state.globalDecors, [type]: decorId }
+  })),
+
+  // Nastaví dekor pro konkrétní skříňku (přepíše globální nastavení)
+  setCabinetDecor: (instanceId, decorType, decorId) => set((state) => ({
+    placedCabinets: state.placedCabinets.map(c =>
+      c.instanceId === instanceId
+        ? { ...c, decors: { ...(c.decors || {}), [decorType]: decorId } }
+        : c
+    ),
+    selectedCabinet: state.selectedCabinet?.instanceId === instanceId
+      ? { ...state.selectedCabinet, decors: { ...(state.selectedCabinet.decors || {}), [decorType]: decorId } }
+      : state.selectedCabinet
+  })),
+
+  // Odstraní override dekoru pro skříňku (použije se globální)
+  clearCabinetDecor: (instanceId, decorType) => set((state) => ({
+    placedCabinets: state.placedCabinets.map(c => {
+      if (c.instanceId !== instanceId) return c
+      const newDecors = { ...(c.decors || {}) }
+      delete newDecors[decorType]
+      return { ...c, decors: Object.keys(newDecors).length > 0 ? newDecors : undefined }
+    }),
+    selectedCabinet: state.selectedCabinet?.instanceId === instanceId
+      ? (() => {
+          const newDecors = { ...(state.selectedCabinet.decors || {}) }
+          delete newDecors[decorType]
+          return { ...state.selectedCabinet, decors: Object.keys(newDecors).length > 0 ? newDecors : undefined }
+        })()
+      : state.selectedCabinet
+  })),
+
+  // Vrátí efektivní dekor pro skříňku (override nebo globální)
+  getEffectiveDecor: (cabinet, decorType) => {
+    const { globalDecors } = get()
+    if (cabinet?.decors?.[decorType]) {
+      return cabinet.decors[decorType]
+    }
+    return globalDecors[decorType]
+  },
+
+  // Najde dekor podle ID
+  findDecorById: (decorId) => {
+    const { decors } = get()
+    for (const collection of decors.collections) {
+      const found = collection.decors.find(d => d.id === decorId)
+      if (found) return { ...found, collection: collection.name }
+    }
+    return null
+  },
+
+  // Funkce pro snap pozice - vrací { position, rotation }
+  snapPosition: (x, y, z, cabinetWidth, cabinetDepth, cabinetType, currentInstanceId, currentRotation = 0) => {
+    const { snapToGrid, snapToWall, snapToCabinet, gridSize, roomWidth, roomDepth, placedCabinets } = get()
+    let snappedX = x
+    let snappedY = y
+    let snappedZ = z
+    let snappedRotation = currentRotation
+
+    const roomW = roomWidth / 1000
+    const roomD = roomDepth / 1000
+    const cabW = cabinetWidth / 1000
+    const cabD = cabinetDepth / 1000
+
+    // Snap to wall s automatickou rotací
+    if (snapToWall) {
+      const wallSnapThreshold = 0.2 // 20cm tolerance pro snap
+      const sideWallThreshold = 0.3 // 30cm tolerance pro boční stěny
+
+      // Detekuj blízkost ke stěnám
+      const nearLeftWall = snappedX < -roomW / 2 + sideWallThreshold
+      const nearRightWall = snappedX > roomW / 2 - cabW - sideWallThreshold
+      const nearBackWall = snappedZ < -roomD / 2 + cabD + wallSnapThreshold
+      const awayFromBackWall = snappedZ > -roomD / 2 + cabD + 0.15
+
+      // LEVÁ STĚNA (X-) - pouze pokud jsme dál od zadní stěny
+      if (nearLeftWall && awayFromBackWall) {
+        snappedRotation = -Math.PI / 2
+        snappedX = -roomW / 2 + cabD
+      }
+      // PRAVÁ STĚNA (X+) - pouze pokud jsme dál od zadní stěny
+      else if (nearRightWall && awayFromBackWall) {
+        snappedRotation = Math.PI / 2
+        snappedX = roomW / 2 - cabD
+      }
+      // ZADNÍ STĚNA (Z-) - normální orientace
+      else if (nearBackWall) {
+        snappedZ = -roomD / 2 + cabD
+        snappedRotation = 0
+      }
+    }
+
+    // Snap to cabinet - prichytavani k ostatnim skriskam (pouze pokud nejsme na bocni stene)
+    if (snapToCabinet && Math.abs(snappedRotation) < 0.1) {
+      const snapThreshold = 0.12 // 12cm tolerance pro prichyceni
+      const alignThreshold = 0.4 // 40cm tolerance pro zarovnani do rady
+      const PERFECT_SNAP = 0.02 // 2cm = perfektni snap, ukonci hledani
+
+      let bestSnapX = null
+      let bestSnapZ = null
+      let minDistX = snapThreshold
+
+      // Optimalizovany pruchod - s early exit pri perfektnim snapu
+      for (let i = 0; i < placedCabinets.length; i++) {
+        const other = placedCabinets[i]
+
+        // Rychle filtrovani - preskoc nevhodne skrinky
+        if (other.instanceId === currentInstanceId) continue
+        if (Math.abs(other.rotation || 0) >= 0.1) continue
+        if (cabinetType === 'wall' ? other.type !== 'wall' : other.type === 'wall') continue
+
+        const otherX = other.position[0]
+        const otherZ = other.position[2]
+
+        // Rychla kontrola Z vzdalenosti pred dalsimi vypocty
+        const zDist = Math.abs(snappedZ - otherZ)
+        if (zDist >= alignThreshold) continue
+
+        const otherW = (other.width || 600) / 1000
+
+        // Snap k prave hrane jine skrinky
+        const rightEdge = otherX + otherW
+        const distToRight = Math.abs(snappedX - rightEdge)
+
+        if (distToRight < minDistX) {
+          minDistX = distToRight
+          bestSnapX = rightEdge
+          bestSnapZ = otherZ
+          // Early exit pri perfektnim snapu
+          if (minDistX < PERFECT_SNAP) break
+        }
+
+        // Snap k leve hrane jine skrinky
+        const distToLeft = Math.abs((snappedX + cabW) - otherX)
+
+        if (distToLeft < minDistX) {
+          minDistX = distToLeft
+          bestSnapX = otherX - cabW
+          bestSnapZ = otherZ
+          // Early exit pri perfektnim snapu
+          if (minDistX < PERFECT_SNAP) break
+        }
+      }
+
+      if (bestSnapX !== null) {
+        snappedX = bestSnapX
+        snappedZ = bestSnapZ
+      }
+    }
+
+    // Snap to grid (pouze pro neotočené skříňky)
+    if (snapToGrid && Math.abs(snappedRotation) < 0.1) {
+      snappedX = Math.round(snappedX / gridSize) * gridSize
+      snappedZ = Math.round(snappedZ / gridSize) * gridSize
+    }
+
+    // Omez Y podle typu skříňky
+    if (cabinetType === 'wall') {
+      snappedY = Math.max(1.0, Math.min(1.8, snappedY))
+    } else {
+      snappedY = 0
+    }
+
+    // FINÁLNÍ boundary check - VŽDY omez pozici v rámci místnosti (po všech snapech)
+    const isRotated = Math.abs(snappedRotation) > 0.1
+    const effectiveD = isRotated ? cabW : cabD
+
+    // Hranice podle rotace
+    const minX = -roomW / 2 + (isRotated ? cabD : 0)
+    const maxX = roomW / 2 - (isRotated ? cabD : cabW)
+    const minZ = -roomD / 2 + effectiveD
+    const maxZ = roomD / 2 - 0.05
+
+    snappedX = Math.max(minX, Math.min(maxX, snappedX))
+    snappedZ = Math.max(minZ, Math.min(maxZ, snappedZ))
+
+    return {
+      position: [snappedX, snappedY, snappedZ],
+      rotation: snappedRotation
+    }
+  },
+
+  clearAllCabinets: () => set({
+    placedCabinets: [],
+    selectedCabinet: null
+  }),
+
+  // Přidání vzorové kuchyně
+  loadSampleKitchen: () => {
+    const { catalog, roomDepth } = get()
+    if (catalog.cabinets.length === 0) return
+
+    const sampleCabinets = []
+    const zBase = -(roomDepth / 1000) / 2 + 0.3
+    const zWall = -(roomDepth / 1000) / 2 + 0.2
+
+    // Najdi různé typy skříněk
+    const baseCabs = catalog.cabinets.filter(c => c.type === 'base')
+    const wallCabs = catalog.cabinets.filter(c => c.type === 'wall')
+    const tallCabs = catalog.cabinets.filter(c => c.type === 'tall')
+
+    let xPos = -1.5
+
+    // Přidej vysokou skříňku vlevo
+    if (tallCabs.length > 0) {
+      const tall = tallCabs[0]
+      const width = (tall.width || 600) / 1000
+      sampleCabinets.push({
+        ...tall,
+        instanceId: Date.now() + Math.random(),
+        position: [xPos, 0, zBase],
+        rotation: 0
+      })
+      xPos += width + 0.002
+    }
+
+    // Přidej 4 spodní skříňky
+    for (let i = 0; i < Math.min(4, baseCabs.length); i++) {
+      const cab = baseCabs[i]
+      const width = (cab.width || 600) / 1000
+      sampleCabinets.push({
+        ...cab,
+        instanceId: Date.now() + Math.random() + i,
+        position: [xPos, 0, zBase],
+        rotation: 0
+      })
+      xPos += width + 0.002
+    }
+
+    // Přidej horní skříňky nad spodními
+    let xPosWall = -1.5
+    if (tallCabs.length > 0) {
+      xPosWall += (tallCabs[0].width || 600) / 1000 + 0.002
+    }
+
+    for (let i = 0; i < Math.min(4, wallCabs.length); i++) {
+      const cab = wallCabs[i]
+      const width = (cab.width || 600) / 1000
+      sampleCabinets.push({
+        ...cab,
+        instanceId: Date.now() + Math.random() + i + 100,
+        position: [xPosWall, 1.4, zWall],
+        rotation: 0
+      })
+      xPosWall += width + 0.002
+    }
+
+    set({ placedCabinets: sampleCabinets, selectedCabinet: null })
+  },
+
+  // Broadcast stavu do nahledoveho okna
+  broadcastToPreview: () => {
+    const state = get()
+    broadcastState(state)
+  }
+}))
+
+// Subscribe na zmeny a automaticky broadcast do preview okna
+// Pouziva debounce aby se neposilalo prilis casto
+let broadcastTimeout = null
+useStore.subscribe((state, prevState) => {
+  // Broadcast pouze pri zmene relevantnich dat
+  const shouldBroadcast =
+    state.placedCabinets !== prevState.placedCabinets ||
+    state.selectedCabinet !== prevState.selectedCabinet ||
+    state.roomWidth !== prevState.roomWidth ||
+    state.roomDepth !== prevState.roomDepth ||
+    state.roomHeight !== prevState.roomHeight ||
+    state.globalDecors !== prevState.globalDecors
+
+  if (shouldBroadcast) {
+    // Debounce - max 1 broadcast za 50ms
+    if (broadcastTimeout) clearTimeout(broadcastTimeout)
+    broadcastTimeout = setTimeout(() => {
+      broadcastState(state)
+    }, 50)
+  }
+})

@@ -1,0 +1,404 @@
+{
+  "collections": [
+    {
+      "id": "dolti",
+      "name": "Dolti",
+      "description": "Základní kolekce dekorů Dolti",
+      "decors": [
+        {
+          "id": "dolti-afriqa",
+          "name": "AFRIQA",
+          "imageUrl": "/textures/decors/dolti-afriqa.png",
+          "thumbUrl": "/textures/decors/dolti-afriqa.png",
+          "type": "wood"
+        },
+        {
+          "id": "dolti-antiqon",
+          "name": "ANTIQON",
+          "imageUrl": "https://kuchyne-oresi.cz/wp-content/uploads/2025/03/ANTIQON_Dolti_Oresi_14.png",
+          "thumbUrl": "https://kuchyne-oresi.cz/wp-content/uploads/2025/03/Oresi_ANTIQON_Dolti_14-150x150.png",
+          "type": "wood"
+        },
+        {
+          "id": "dolti-artiqa",
+          "name": "ARTIQA",
+          "imageUrl": "https://kuchyne-oresi.cz/wp-content/uploads/2025/03/ARTIQA_Dolti_Oresi_01.png",
+          "thumbUrl": "https://kuchyne-oresi.cz/wp-content/uploads/2025/03/Oresi_ARTIQA_Dolti_01-150x150.png",
+          "type": "wood"
+        },
+        {
+          "id": "dolti-caribiq",
+          "name": "CARIBIQ",
+          "imageUrl": "https://kuchyne-oresi.cz/wp-content/uploads/2025/03/CARIBIQ_Dolti_Oresi_13.png",
+          "thumbUrl": "https://kuchyne-oresi.cz/wp-content/uploads/2025/03/Oresi_CARIBIQ_Dolti_13-150x150.png",
+          "type": "wood"
+        },
+        {
+          "id": "dolti-classiq",
+          "name": "CLASSIQ",
+          "imageUrl": "/textures/decors/dolti-classiq.png",
+          "thumbUrl": "/textures/decors/dolti-classiq.png",
+          "type": "wood"
+        },
+        {
+          "id": "dolti-epiqa",
+          "name": "EPIQA",
+          "imageUrl": "/textures/decors/dolti-epiqa.png",
+          "thumbUrl": "/textures/decors/dolti-epiqa.png",
+          "type": "wood"
+        },
+        {
+          "id": "dolti-iqony",
+          "name": "IQONY",
+          "imageUrl": "https://kuchyne-oresi.cz/wp-content/uploads/2025/03/IQONY_Dolti_Oresi_10.png",
+          "thumbUrl": "https://kuchyne-oresi.cz/wp-content/uploads/2025/03/Oresi_IQONY_Dolti_10-150x150.png",
+          "type": "wood"
+        },
+        {
+          "id": "dolti-logiq",
+          "name": "LOGIQ",
+          "imageUrl": "/textures/decors/dolti-logiq.png",
+          "thumbUrl": "/textures/decors/dolti-logiq.png",
+          "type": "wood"
+        },
+        {
+          "id": "dolti-miqado",
+          "name": "MIQADO",
+          "imageUrl": "https://kuchyne-oresi.cz/wp-content/uploads/2025/03/MIQADO_Dolti_Oresi_08.png",
+          "thumbUrl": "https://kuchyne-oresi.cz/wp-content/uploads/2025/03/Oresi_MIQADO_Dolti_08-150x150.png",
+          "type": "wood"
+        },
+        {
+          "id": "dolti-narviqa",
+          "name": "NARVIQA",
+          "imageUrl": "https://kuchyne-oresi.cz/wp-content/uploads/2025/03/NARVIQA_Dolti_Oresi_07.png",
+          "thumbUrl": "https://kuchyne-oresi.cz/wp-content/uploads/2025/03/Oresi_NARVIQA_Dolti_07-150x150.png",
+          "type": "wood"
+        },
+        {
+          "id": "dolti-piqara",
+          "name": "PIQARA",
+          "imageUrl": "https://kuchyne-oresi.cz/wp-content/uploads/2025/03/PIQARA_Dolti_Oresi_06.png",
+          "thumbUrl": "https://kuchyne-oresi.cz/wp-content/uploads/2025/03/Oresi_PIQARA_Dolti_06-150x150.png",
+          "type": "wood"
+        },
+        {
+          "id": "dolti-piqtory",
+          "name": "PIQTORY",
+          "imageUrl": "https://kuchyne-oresi.cz/wp-content/uploads/2025/03/PIQTORY_Dolti_Oresi_05.png",
+          "thumbUrl": "https://kuchyne-oresi.cz/wp-content/uploads/2025/03/Oresi_PIQTORY_Dolti_05-150x150.png",
+          "type": "wood"
+        },
+        {
+          "id": "dolti-romantiqa",
+          "name": "ROMANTIQA",
+          "imageUrl": "https://kuchyne-oresi.cz/wp-content/uploads/2025/03/ROMANTIQA_Dolti_Oresi_04.png",
+          "thumbUrl": "https://kuchyne-oresi.cz/wp-content/uploads/2025/03/Oresi_ROMANTIQA_Dolti_04-150x150.png",
+          "type": "wood"
+        },
+        {
+          "id": "dolti-tropiqa",
+          "name": "TROPIQA",
+          "imageUrl": "/textures/decors/dolti-tropiqa.png",
+          "thumbUrl": "/textures/decors/dolti-tropiqa.png",
+          "type": "wood"
+        },
+        {
+          "id": "dolti-viqtory",
+          "name": "VIQTORY",
+          "imageUrl": "https://kuchyne-oresi.cz/wp-content/uploads/2025/03/VIQTORY_Dolti_Oresi_02.png",
+          "thumbUrl": "https://kuchyne-oresi.cz/wp-content/uploads/2025/03/Oresi_VIQTORY_Dolti_02-150x150.png",
+          "type": "wood"
+        }
+      ]
+    },
+    {
+      "id": "dolti-collection",
+      "name": "Dolti Collection",
+      "description": "Prémiová kolekce dekorů Dolti Collection",
+      "decors": [
+        {
+          "id": "dc-glam-face-hawlit",
+          "name": "GLAM FACE – HAWLIT",
+          "imageUrl": "https://kuchyne-oresi.cz/wp-content/uploads/2025/04/Oresi_DoltiCollection_GLAM-FACE-HAWLIT_01.png",
+          "type": "stone"
+        },
+        {
+          "id": "dc-big-picture-borovice",
+          "name": "BIG PICTURE – BOROVICE PROVENCE",
+          "imageUrl": "https://kuchyne-oresi.cz/wp-content/uploads/2025/04/Oresi_DoltiCollection_BIG-PICTURE-BOROVICE-PROVENCE_02.png",
+          "type": "wood"
+        },
+        {
+          "id": "dc-silk-touch-city",
+          "name": "SILK TOUCH – CITY",
+          "imageUrl": "/textures/decors/dc-silk-touch-city.png",
+          "type": "solid"
+        },
+        {
+          "id": "dc-silk-touch-summer-cloud",
+          "name": "SILK TOUCH – SUMMER CLOUD",
+          "imageUrl": "https://kuchyne-oresi.cz/wp-content/uploads/2025/04/Oresi_DoltiCollection_SILK-TOUCH-SUMMER-CLOUD_04.png",
+          "type": "solid"
+        },
+        {
+          "id": "dc-free-idea-dub-mara",
+          "name": "FREE IDEA – DUB MARA",
+          "imageUrl": "https://kuchyne-oresi.cz/wp-content/uploads/2025/04/Oresi_DoltiCollection_FREE-IDEA-DUB-MARA_05.png",
+          "type": "wood"
+        },
+        {
+          "id": "dc-silk-touch-light-grey",
+          "name": "SILK TOUCH – LIGHT GREY",
+          "imageUrl": "/textures/decors/dc-silk-touch-light-grey.png",
+          "type": "solid"
+        },
+        {
+          "id": "dc-silk-touch-dark-ocean",
+          "name": "SILK TOUCH – DARK OCEAN",
+          "imageUrl": "https://kuchyne-oresi.cz/wp-content/uploads/2025/04/Oresi_DoltiCollection_SILK-TOUCH-DARK-OCEAN_07.png",
+          "type": "solid"
+        },
+        {
+          "id": "dc-silk-touch-moss",
+          "name": "SILK TOUCH – MOSS",
+          "imageUrl": "https://kuchyne-oresi.cz/wp-content/uploads/2025/04/Oresi_DoltiCollection_SILK-TOUCH-MOSS_08.png",
+          "type": "solid"
+        },
+        {
+          "id": "dc-steel-art-silver",
+          "name": "STEEL ART – SILVER METAL",
+          "imageUrl": "https://kuchyne-oresi.cz/wp-content/uploads/2025/04/Oresi_DoltiCollection_STEEL-ART-SILVER-METAL_09.png",
+          "type": "metal"
+        },
+        {
+          "id": "dc-silk-touch-sakura",
+          "name": "SILK TOUCH – SAKURA",
+          "imageUrl": "https://kuchyne-oresi.cz/wp-content/uploads/2025/04/Oresi_DoltiCollection_SILK-TOUCH-SAKURA_10.png",
+          "type": "solid"
+        },
+        {
+          "id": "dc-silk-touch-bonsai",
+          "name": "SILK TOUCH – BONSAI",
+          "imageUrl": "https://kuchyne-oresi.cz/wp-content/uploads/2025/04/Oresi_DoltiCollection_SILK-TOUCH-BONSAI_11.png",
+          "type": "solid"
+        },
+        {
+          "id": "dc-silk-touch-neapol",
+          "name": "SILK TOUCH – NEAPOL",
+          "imageUrl": "https://kuchyne-oresi.cz/wp-content/uploads/2025/04/Oresi_DoltiCollection_SILK-TOUCH-NEAPOL_12.png",
+          "type": "solid"
+        },
+        {
+          "id": "dc-silk-touch-ivory",
+          "name": "SILK TOUCH – IVORY",
+          "imageUrl": "/textures/decors/dc-silk-touch-ivory.png",
+          "type": "solid"
+        },
+        {
+          "id": "dc-tree-talk-dub-strong",
+          "name": "TREE TALK – DUB STRONG WAY",
+          "imageUrl": "https://kuchyne-oresi.cz/wp-content/uploads/2025/04/Oresi_DoltiCollection_TREE-TALK-DUB-STRONG-WAY_14.png",
+          "type": "wood"
+        },
+        {
+          "id": "dc-tree-talk-borovice",
+          "name": "TREE TALK – BOROVICE PATINOVANÁ",
+          "imageUrl": "https://kuchyne-oresi.cz/wp-content/uploads/2025/04/Oresi_DoltiCollection_TREE-TALK-BOROVICE-PATINOVANA_15.png",
+          "type": "wood"
+        },
+        {
+          "id": "dc-glam-face-karneol",
+          "name": "GLAM FACE – KARNEOL",
+          "imageUrl": "https://kuchyne-oresi.cz/wp-content/uploads/2025/04/Oresi_DoltiCollection_GLAM-FACE-KARNEOL_16.png",
+          "type": "stone"
+        },
+        {
+          "id": "dc-glam-face-jaspis",
+          "name": "GLAM FACE – JASPIS",
+          "imageUrl": "https://kuchyne-oresi.cz/wp-content/uploads/2025/04/Oresi_DoltiCollection_GLAM-FACE-JASPIS_17.png",
+          "type": "stone"
+        },
+        {
+          "id": "dc-wood-point-jedle",
+          "name": "WOOD POINT – JEDLE KONTRAST",
+          "imageUrl": "https://kuchyne-oresi.cz/wp-content/uploads/2025/04/Oresi_DoltiCollection_WOOD-POINT-JEDLE-KONTRAST_18.png",
+          "type": "wood"
+        },
+        {
+          "id": "dc-wood-hit-cisarsky-svetly",
+          "name": "WOOD HIT – ČÍNSKÝ CÍSAŘSKÝ STROM SVĚTLÝ",
+          "imageUrl": "https://kuchyne-oresi.cz/wp-content/uploads/2025/04/Oresi_DoltiCollection_WOOD-HIT-CINSKY-CISARSKY-STROM-SVETLY_19.png",
+          "type": "wood"
+        },
+        {
+          "id": "dc-wood-hit-cisarsky-tmavy",
+          "name": "WOOD HIT – ČÍNSKÝ CÍSAŘSKÝ STROM TMAVÝ",
+          "imageUrl": "https://kuchyne-oresi.cz/wp-content/uploads/2025/04/Oresi_DoltiCollection_WOOD-HIT-CINSKY-CISARSKY-STROM-TMAVY_20.png",
+          "type": "wood"
+        },
+        {
+          "id": "dc-wood-hit-dub-belostny",
+          "name": "WOOD HIT – DUB PADANA BĚLOSTNÝ",
+          "imageUrl": "https://kuchyne-oresi.cz/wp-content/uploads/2025/04/Oresi_DoltiCollection_WOOD-HIT-DUB-PADANA-BELOSTNY_21.png",
+          "type": "wood"
+        },
+        {
+          "id": "dc-wood-hit-dub-opalovany",
+          "name": "WOOD HIT – DUB PADANA OPALOVANÝ",
+          "imageUrl": "https://kuchyne-oresi.cz/wp-content/uploads/2025/04/Oresi_DoltiCollection_WOOD-HIT-DUB-PADANA-OPALOVANY_22.png",
+          "type": "wood"
+        },
+        {
+          "id": "dc-velvet-star-sedy",
+          "name": "VELVET STAR – ŠEDÝ SUPERMAT",
+          "imageUrl": "https://kuchyne-oresi.cz/wp-content/uploads/2025/04/Oresi_DoltiCollection_VELVET-STAR-SEDY-SUPERMAT_23.png",
+          "type": "solid"
+        },
+        {
+          "id": "dc-velvet-star-cerny",
+          "name": "VELVET STAR – ČERNÝ SUPERMAT",
+          "imageUrl": "https://kuchyne-oresi.cz/wp-content/uploads/2025/04/Oresi_DoltiCollection_VELVET-STAR-CERNY-SUPERMAT_24.png",
+          "type": "solid"
+        },
+        {
+          "id": "dc-tree-talk-dub-cortona",
+          "name": "TREE TALK – DUB CORTONA",
+          "imageUrl": "https://kuchyne-oresi.cz/wp-content/uploads/2025/04/Oresi_DoltiCollection_TREE-TALK-DUB-CORTONA_25.png",
+          "type": "wood"
+        },
+        {
+          "id": "dc-magiq-cappuccino",
+          "name": "MAGIQ – CAPPUCCINO",
+          "imageUrl": "https://kuchyne-oresi.cz/wp-content/uploads/2025/04/Oresi_DoltiCollection_MAGIQ-CAPPUCCINO_26.png",
+          "type": "solid"
+        },
+        {
+          "id": "dc-steel-art-struktur",
+          "name": "STEEL ART – ART DEKOR STRUKTUR",
+          "imageUrl": "https://kuchyne-oresi.cz/wp-content/uploads/2025/04/Oresi_DoltiCollection_STEEL-ART-ART-DEKOR-STRUKTUR_27.png",
+          "type": "metal"
+        },
+        {
+          "id": "dc-magiq-arctic",
+          "name": "MAGIQ – ARCTIC",
+          "imageUrl": "https://kuchyne-oresi.cz/wp-content/uploads/2025/04/Oresi_DoltiCollection_MAGIQ-ARCTIC_28.png",
+          "type": "solid"
+        },
+        {
+          "id": "dc-tree-talk-dub-antik",
+          "name": "TREE TALK – DUB ANTIK",
+          "imageUrl": "https://kuchyne-oresi.cz/wp-content/uploads/2025/10/Oresi_DoltiCollection_TREE-TALK-DUB-ANTIK_29.png",
+          "type": "wood"
+        },
+        {
+          "id": "dc-tree-talk-akat",
+          "name": "TREE TALK – AKÁT GLAMOUR",
+          "imageUrl": "https://kuchyne-oresi.cz/wp-content/uploads/2025/04/Oresi_DoltiCollection_TREE-TALK-AKAT-GLAMOUR_30.png",
+          "type": "wood"
+        },
+        {
+          "id": "dc-steel-art-relief",
+          "name": "STEEL ART – ART DEKOR RELIÉF",
+          "imageUrl": "https://kuchyne-oresi.cz/wp-content/uploads/2025/04/Oresi_DoltiCollection_STEEL-ART-ART-DEKOR-RELIEF_31.png",
+          "type": "metal"
+        },
+        {
+          "id": "dc-steel-art-corten",
+          "name": "STEEL ART – ART DEKOR CORTEN",
+          "imageUrl": "https://kuchyne-oresi.cz/wp-content/uploads/2025/04/Oresi_DoltiCollection_STEEL-ART-ART-DEKOR-CORTEN_32.png",
+          "type": "metal"
+        },
+        {
+          "id": "dc-silk-touch-cappuccino",
+          "name": "SILK TOUCH – HEDVÁBNÝ MAT CAPPUCCINO",
+          "imageUrl": "https://kuchyne-oresi.cz/wp-content/uploads/2025/04/Oresi_DoltiCollection_SILK-TOUCH-HEDVABNY-MAT-CAPPUCCINO_33.png",
+          "type": "solid"
+        },
+        {
+          "id": "dc-silk-touch-sedy-mat",
+          "name": "SILK TOUCH – HEDVÁBNÝ MAT ŠEDÝ",
+          "imageUrl": "https://kuchyne-oresi.cz/wp-content/uploads/2025/04/Oresi_DoltiCollection_SILK-TOUCH-HEDVABNY-MAT-SEDY_34.png",
+          "type": "solid"
+        },
+        {
+          "id": "dc-tree-talk-dub-craft",
+          "name": "TREE TALK – DUB CRAFT ŠEDÝ",
+          "imageUrl": "https://kuchyne-oresi.cz/wp-content/uploads/2025/04/Oresi_DoltiCollection_TREE-TALK-DUB-CRAFT-SEDY_35.png",
+          "type": "wood"
+        },
+        {
+          "id": "dc-chocolate-day-bily",
+          "name": "CHOCOLATE DAY – BÍLÝ HEDVÁBNÝ MAT",
+          "imageUrl": "https://kuchyne-oresi.cz/wp-content/uploads/2025/04/Oresi_DoltiCollection_CHOCOLATE-DAY-BILY-HEDVABNY-MAT_36.png",
+          "type": "solid"
+        },
+        {
+          "id": "dc-wood-point-borovice",
+          "name": "WOOD POINT – BOROVICE AKCENT",
+          "imageUrl": "https://kuchyne-oresi.cz/wp-content/uploads/2025/04/Oresi_DoltiCollection_WOOD-POINT-BOROVICE-AKCENT_37.png",
+          "type": "wood"
+        },
+        {
+          "id": "dc-forever-young-lemon",
+          "name": "FOREVER YOUNG – VYSOKÝ LESK LEMON",
+          "imageUrl": "https://kuchyne-oresi.cz/wp-content/uploads/2025/04/Oresi_DoltiCollection_FOREVER-YOUNG-VYSOKY-LESK-LEMON_38.png",
+          "type": "solid"
+        },
+        {
+          "id": "dc-gray-cat-lesk",
+          "name": "GRAY CAT – ŠEDÝ LESK",
+          "imageUrl": "https://kuchyne-oresi.cz/wp-content/uploads/2025/04/Oresi_DoltiCollection_GRAY-CAT-SEDY-LESK_39.png",
+          "type": "solid"
+        },
+        {
+          "id": "dc-art-beton-chromix",
+          "name": "ART BETON – CHROMIX STŘÍBRNÝ",
+          "imageUrl": "https://kuchyne-oresi.cz/wp-content/uploads/2025/04/Oresi_DoltiCollection_ART-BETON-CHROMIX-STRIBRNY_40.png",
+          "type": "stone"
+        },
+        {
+          "id": "dc-magiq-magnolie",
+          "name": "MAGIQ – MAGNÓLIE",
+          "imageUrl": "https://kuchyne-oresi.cz/wp-content/uploads/2025/04/Oresi_DoltiCollection_MAGIQ-MAGNOLIE_41.png",
+          "type": "solid"
+        },
+        {
+          "id": "dc-forever-young-porto",
+          "name": "FOREVER YOUNG – VYSOKÝ LESK PORTO",
+          "imageUrl": "https://kuchyne-oresi.cz/wp-content/uploads/2025/04/Oresi_DoltiCollection_FOREVER-YOUNG-VYSOKY-LESK-PORTO_42.png",
+          "type": "solid"
+        },
+        {
+          "id": "dc-fantasy-jilm",
+          "name": "FANTASY – JILM EXPRESSIVE",
+          "imageUrl": "https://kuchyne-oresi.cz/wp-content/uploads/2025/04/Oresi_DoltiCollection_FANTASY-JILM-EXPRESSIVE_43.png",
+          "type": "wood"
+        },
+        {
+          "id": "dc-big-picture-dub",
+          "name": "BIG PICTURE – DUB COUNTRY",
+          "imageUrl": "https://kuchyne-oresi.cz/wp-content/uploads/2025/04/Oresi_DoltiCollection_BIG-PICTURE-DUB-COUNTRY_44.png",
+          "type": "wood"
+        },
+        {
+          "id": "dc-piqtory-lava",
+          "name": "PIQTORY – LAVA",
+          "imageUrl": "https://kuchyne-oresi.cz/wp-content/uploads/2025/04/Oresi_DoltiCollection_PIQTORY-LAVA_45.png",
+          "type": "stone"
+        },
+        {
+          "id": "dc-wood-point-dub-true",
+          "name": "WOOD POINT – DUB TRUE NATURE",
+          "imageUrl": "https://kuchyne-oresi.cz/wp-content/uploads/2025/04/Oresi_DoltiCollection_WOOD-POINT-DUB-TRUE-NATURE_46.png",
+          "type": "wood"
+        }
+      ]
+    }
+  ],
+  "defaults": {
+    "frontDecor": "dolti-classiq",
+    "bodyDecor": "dolti-logiq",
+    "countertopDecor": "dc-art-beton-chromix"
+  }
+}
